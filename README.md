@@ -1,2 +1,1 @@
-# gaia_tools_util
-utility functions for Jo Bovy's gaia_tools
+For use with Bovy's gaia_tools
