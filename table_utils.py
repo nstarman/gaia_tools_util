@@ -21,23 +21,6 @@ except ImportError:
     from astropy import units as u
 
 
-def add_units_to_query(df, udict=None, equivalencies=[]):
-    """Astropy tables
-    """
-    if udict is None:
-        return
-
-    for k, v in udict.items():
-        if k not in df.colnames:
-            continue
-
-        if df[k].unit is None:
-            setattr(df[k], 'unit', v)
-        else:
-            df[k] = df[k].to(v, equivalencies=equivalencies)  # TODO in-place
-    return df
-
-
 def neg_to_nan(df, col):
     """set negative parallaxes to nan
     This edits  a view
@@ -88,11 +71,17 @@ def add_units_to_Table(df, udict=None, _subkey=None):
 
     # Adding Units, if corresponding column in Table
     for key, unit in udict.items():
-        if key in df.columns and df[key].unit != unit:  # FIXME?
+        if key in df.columns and df[key].unit != unit:
             setattr(df[key], 'unit', unit)
 
     df = QTable(df)
     return df
+
+
+def add_units_to_query(df, udict=None, _subkey=None):
+    """__deprecated__ use add_units_to_Table
+    """
+    return add_units_to_Table(df, udict=udict, _subkey=_subkey)
 
 
 def add_color_col(df, c1, c2, **kw):
@@ -250,14 +239,14 @@ def drop_colnames(colnames, *args):
 ###############################################################################
 # Loading Tables
 
-# def loadPS1xmatchTable_calccolumns(fpath, format='fits', prxlneg2Nan=True):
-#     df = QTable.read(fpath, format=format)
+def loadPS1xmatchTable_calccolumns(fpath, format='fits', prxlneg2Nan=True):
+    df = QTable.read(fpath, format=format)
 
-#     if prxlneg2Nan is True:
-#         neg_to_nan(df, col='prlx')
+    if prxlneg2Nan is True:
+        neg_to_nan(df, col='prlx')
 
-#     add_color_col(df, 'g', 'r')
-#     add_color_col(df, 'g', 'i')
-#     add_abs_pm_col(df, 'pmra', 'pmdec')
+    add_color_col(df, 'g', 'r')
+    add_color_col(df, 'g', 'i')
+    add_abs_pm_col(df, 'pmra', 'pmdec')
 
-#     return df
+    return df
