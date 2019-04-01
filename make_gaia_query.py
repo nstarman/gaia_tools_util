@@ -71,7 +71,7 @@ else:
 
 __author__ = "Nathaniel Starkman"
 __copyright__ = "Copyright 2018, "
-__credits__ = [""]
+__credits__ = ["Jo Bovy"]
 __license__ = "MIT"
 __version__ = "1.0.0"
 __maintainer__ = "Nathaniel Starkman"
@@ -80,6 +80,7 @@ __status__ = "Production"
 
 #############################################################################
 # Code
+
 
 def _make_query_defaults(fpath='default'):
     r"""Make default values for query
@@ -114,7 +115,7 @@ def _make_query_defaults(fpath='default'):
     # loading file
     elif fpath in ('default', 'empty', 'full'):
         dirname = os.path.dirname(__file__)
-        dirpath = os.path.join(dirname, 'defaults/gaia/defaults.json')
+        dirpath = os.path.join(dirname, 'defaults/gaia_defaults.json')
 
         with open(dirpath, 'r') as file:
             df = json.load(file)
@@ -188,7 +189,7 @@ def _make_query_SELECT(user_cols=None, use_AS=True,
             None: uses 'defaults'
             str: 'default', 'empty', or 'full'
             dict, assumes the dictionary is correct and returns as is
-        default file in  '/gaia/defaults.json'
+        default file in  'defaults/gaia_defaults.json'
 
     Returns
     -------
@@ -198,7 +199,7 @@ def _make_query_SELECT(user_cols=None, use_AS=True,
     DEFAULTS
     --------
     In a Json-esque format.
-    See gaia_query_defaults.json
+    See defaults/gaia_defaults.json
     """
 
     ####################
@@ -378,16 +379,16 @@ def _make_query_ORDERBY(ORDERBY):
     return s
 
 
-def make_gaia_query(WHERE=None, ORDERBY=None, FROM=None, random_index=False,
-                    user_cols=None, all_columns=False,
-                    gaia_mags=False, panstarrs1=False, twomass=False,
-                    use_AS=False, user_ASdict=None, defaults='default',
-                    inmostquery=False,
-                    units=False,
-                    # doing the query
-                    do_query=False, local=False,
-                    # extra options
-                    _tab='    ', pprint=False):
+def make_query(WHERE=None, ORDERBY=None, FROM=None, random_index=False,
+               user_cols=None, all_columns=False,
+               gaia_mags=False, panstarrs1=False, twomass=False,
+               use_AS=False, user_ASdict=None, defaults='default',
+               inmostquery=False,
+               units=False,
+               # doing the query
+               do_query=False, local=False,
+               # extra options
+               _tab='    ', pprint=False):
     """Makes a whole Gaia query
 
     INPUTS
@@ -424,7 +425,7 @@ def make_gaia_query(WHERE=None, ORDERBY=None, FROM=None, random_index=False,
         dictionary containing `AS' arguments
     defaults: str (or None or dict)
         the filepath (str) of the gaia query defaults
-        if None, uses '/gaia_query_defaults.json'
+        if None, uses '/defaults/gaia_defaults.json'
         if ''
         if dict, assumes the dictionary is correct and returns
         **SEE DEFAULTS
@@ -455,7 +456,7 @@ def make_gaia_query(WHERE=None, ORDERBY=None, FROM=None, random_index=False,
     DEFAULTS
     --------
     In a Json-esque format.
-    See gaia_query_defaults.json
+    See defaults/gaia_defaults.json
     """
 
     query, udict = _make_query_SELECT(user_cols=user_cols, use_AS=use_AS,
@@ -532,13 +533,13 @@ def make_gaia_query(WHERE=None, ORDERBY=None, FROM=None, random_index=False,
                 return query, {}
 
 
-def make_simple_gaia_query(WHERE=None, ORDERBY=None, FROM=None,
-                           random_index=False,
-                           user_cols=None, all_columns=False,
-                           gaia_mags=False, panstarrs1=False, twomass=False,
-                           user_ASdict=None, defaults='default', units=False,
-                           do_query=False, local=False,
-                           pprint=False):
+def make_simple_query(WHERE=None, ORDERBY=None, FROM=None,
+                      random_index=False,
+                      user_cols=None, all_columns=False,
+                      gaia_mags=False, panstarrs1=False, twomass=False,
+                      user_ASdict=None, defaults='default', units=False,
+                      do_query=False, local=False,
+                      pprint=False):
     """make_gaia_query wrapper for single-layer queries
     with some defaults changed and options removed
     use_AS and inmostquery are now True.
@@ -573,7 +574,7 @@ def make_simple_gaia_query(WHERE=None, ORDERBY=None, FROM=None,
         dictionary containing `AS' arguments
     defaults: str (or None or dict)
         the filepath (str) of the gaia query defaults
-        if None, uses '/gaia_query_defaults.json'
+        if None, uses '/defaults/gaia_defaults.json'
         if ''
         if dict, assumes the dictionary is correct and returns
         **SEE DEFAULTS
@@ -599,16 +600,16 @@ def make_simple_gaia_query(WHERE=None, ORDERBY=None, FROM=None,
     DEFAULTS
     --------
     In a Json-esque format.
-    See gaia_query_defaults.json
+    See defaults/gaia_defaults.json
     """
 
-    return make_gaia_query(WHERE=WHERE, ORDERBY=ORDERBY, FROM=FROM,
-                           random_index=random_index,
-                           user_cols=user_cols, use_AS=True,
-                           all_columns=all_columns,
-                           gaia_mags=gaia_mags,
-                           panstarrs1=panstarrs1, twomass=twomass,
-                           user_ASdict=user_ASdict, inmostquery=True,
-                           defaults=defaults, units=units,
-                           do_query=do_query, local=local,
-                           pprint=pprint)
+    return make_query(WHERE=WHERE, ORDERBY=ORDERBY, FROM=FROM,
+                      random_index=random_index,
+                      user_cols=user_cols, use_AS=True,
+                      all_columns=all_columns,
+                      gaia_mags=gaia_mags,
+                      panstarrs1=panstarrs1, twomass=twomass,
+                      user_ASdict=user_ASdict, inmostquery=True,
+                      defaults=defaults, units=units,
+                      do_query=do_query, local=local,
+                      pprint=pprint)
